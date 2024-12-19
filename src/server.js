@@ -5,14 +5,17 @@ import path, { dirname } from 'path';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { fileURLToPath } from 'url';
-import { testConnection } from './database/db.js'; // Incluye la extensión .js
-
+import UserRoutes from './routes/user.routes.js'
+import { testConnection } from './database/db.js';
 // Inicializamos Express en la variable app
 const app = express();
 
 // Obtenemos __dirname en ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+//montar rutas con el prefijo api
+app.use('/api', UserRoutes)
 
 const corsOptions = {
     origin: 'http://localhost:5173', // Asegúrate de que esta sea la URL correcta de tu frontend
@@ -34,5 +37,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
+startServer()
+
+//probar la conexion y luego levantar el servidor
+async function startServer() {
+    try {
+        //probar la conexion a la base de datos
+        await testConnection();
+        //si la conexion es exitosa, iniciar el servidor
+        app.listen(3000)
+        console.log('SERVER ON')
+    } catch (error) {
+        //manejar errores de conexion
+        console.error("Error en la conexion a la base de datos. No se puede levantar el servidor", error)
+    }
+}
 
 export default app;
