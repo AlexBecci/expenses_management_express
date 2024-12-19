@@ -5,8 +5,11 @@ import path, { dirname } from 'path';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { fileURLToPath } from 'url';
+//routes
 import UserRoutes from './routes/user.routes.js'
+import AuthRoutes from './routes/auth.routes.js'
 import { testConnection } from './database/db.js';
+import { authenticateToken } from './controller/auth.controller.js';
 // Inicializamos Express en la variable app
 const app = express();
 
@@ -14,11 +17,8 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-//montar rutas con el prefijo api
-app.use('/api', UserRoutes)
-
 const corsOptions = {
-    origin: 'http://localhost:5173', // Asegúrate de que esta sea la URL correcta de tu frontend
+    origin: 'http://localhost:5173', // Asegúrate de que esta sea la URL correcta de tu frontend usar variable de env
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
@@ -29,6 +29,12 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(cors(corsOptions));
+
+
+//montar rutas con el prefijo api
+app.use('/api', AuthRoutes)
+app.use('/api',authenticateToken, UserRoutes)
+
 
 // Servir archivos estáticos desde la carpeta public
 app.use(express.static(path.join(__dirname, 'public')));

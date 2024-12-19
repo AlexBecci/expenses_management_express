@@ -21,8 +21,10 @@ CREATE TABLE User (
 -- Table Category
 CREATE TABLE Category (
     id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,  -- Relacionar categoría con el usuario
     name VARCHAR(50) NOT NULL,
     type ENUM('income', 'expense') -- Categories specific to income or expenses
+    FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE
 );
 
 -- Tabla Transaccion

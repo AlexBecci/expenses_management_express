@@ -4,3 +4,4 @@ export async function getUsers(req, res) {
     const result = getUsersService(req, res)
     return result
 }
+
