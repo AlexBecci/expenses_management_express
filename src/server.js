@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 //routes
 import UserRoutes from './routes/user.routes.js'
 import AuthRoutes from './routes/auth.routes.js'
+import CategoryRoutes from './routes/category.routes.js'
 import { testConnection } from './database/db.js';
 import { authenticateToken } from './controller/auth.controller.js';
 // Inicializamos Express en la variable app
@@ -33,7 +34,8 @@ app.use(cors(corsOptions));
 
 //montar rutas con el prefijo api
 app.use('/api', AuthRoutes)
-app.use('/api',authenticateToken, UserRoutes)
+app.use('/api', authenticateToken, UserRoutes)
+app.use('/api', authenticateToken, CategoryRoutes)
 
 
 // Servir archivos estáticos desde la carpeta public

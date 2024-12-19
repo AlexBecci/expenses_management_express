@@ -1,5 +1,5 @@
 import { pool } from "../database/db.js";
-import { handleError } from "../error/message.js";
+import { handleDatabaseError, handleError } from "../error/message.js";
 
 export async function getUsersService(req, res) {
     try {
@@ -17,8 +17,7 @@ export async function getUserByEmail(email) {
         return row
     } catch (error) {
         /* handleError(res, error) */
-        console.error("Error en la consulta a la base de datos: ", error);
-        throw new Error("Error en la consulta a la base de datos");
+        handleDatabaseError(error)
     }
 }
 
@@ -29,7 +28,6 @@ export async function createUserService(email, password, name, phone_number) {
         return { id: result.insertId, message: 'Usuario creado con exito' }
     } catch (error) {
         /* handleError(res, error) */
-        console.error("Error en la consulta a la base de datos: ", error);
-        throw new Error("Error en la consulta a la base de datos");
+        handleDatabaseError(error)
     }
 }

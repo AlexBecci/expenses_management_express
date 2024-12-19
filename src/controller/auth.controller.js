@@ -86,7 +86,7 @@ export function logout(req, res) {
 //funcion que valida la session del usuario mediante un check_session
 export function authenticateToken(req, res, next) {
     const token = req.cookies.authToken;
-    console.log('token recibido', token)
+ /*    console.log('token recibido', token) */
     if (!token) {
         return res.status(401).json({ message: 'No Token Provider' })
     }
@@ -94,7 +94,7 @@ export function authenticateToken(req, res, next) {
         if (err) {
             return res.status(403).json({ message: 'Invalid Token' })
         }
-        console.log('Usuario autenticado', user)//log para verificar qu el usuario se verifico de forma correcta
+    /*     console.log('Usuario autenticado', user)//log para verificar qu el usuario se verifico de forma correcta */
         req.user = user;
         next()
     })
