@@ -3,7 +3,7 @@ import { createCategory, getCategories } from "../controller/category.controller
 
 const router = Router();
 
-router.get('/category/:user_id', getCategories)
-router.post('/category', createCategory)
+router.get('/categories/:user_id', getCategories)
+router.post('/categories', createCategory)
 
 export default router
