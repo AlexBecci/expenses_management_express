@@ -12,6 +12,6 @@ export const DB_DATABASE = process.env.DB_DATABASE || 'expenses_management'
 export const DB_PORT = process.env.DB_PORT || 3306
 export const MYSQL_URL = process.env.MYSQL_URL || 'mysql://root:1234@localhost:3306/expenses_management'
 export const SECRET_KEY = process.env.SECRET_KEY || 'my_secret_key'
-export const NODE_ENV = process.env.NODE_ENV || 'developed' // or 'production'
+export const NODE_ENV = process.env.NODE_ENV || 'production' // or 'production'
 
 

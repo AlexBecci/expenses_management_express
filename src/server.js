@@ -21,7 +21,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const corsOptions = {
-    origin: 'http://localhost:5173', // Asegúrate de que esta sea la URL correcta de tu frontend usar variable de env
+    origin: 'http://localhost:3001', // Asegúrate de que esta sea la URL correcta de tu frontend usar variable de env
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
