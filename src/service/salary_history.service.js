@@ -2,10 +2,10 @@ import { pool } from "../database/db.js";
 import { handleDatabaseError } from "../error/message.js";
 
 
-class SalaryHistoryService {
+export class SalaryHistoryService {
     //crear un nuevo salario historico
     async createSalaryHistory(user_id, previous_salary, new_salary) {
-        const [result] = await db.execute(
+        const [result] = await pool.query(
             'INSERT INTO salary_history (user_id, previous_salary, new_salary) VALUES (?, ?, ?)',
             [user_id, previous_salary, new_salary]
         );
@@ -23,12 +23,13 @@ class SalaryHistoryService {
     //actualizar un salario historico
     async updateSalaryHistory(id, user_id, previous_salary, new_salary) {
         try {
-            const [result] = await pool.query('UPDATE salary_history SET previos_salary = ?, new_salary = ? WHERE id = ? AND user_id = ?', [previous_salary, new_salary, id, user_id])
+            const [result] = await pool.query('UPDATE salary_history SET previous_salary = ?, new_salary = ? WHERE id = ? AND user_id = ?', [previous_salary, new_salary, id, user_id])
             return result.affectedRows > 0
         } catch (error) {
             handleDatabaseError(error)
         }
     }
+
     //eliminar salario historico
     async deleteSalaryHistory(id, user_id) {
         try {
@@ -39,5 +40,3 @@ class SalaryHistoryService {
         }
     }
 }
-
-module.exports = new SalaryHistoryService()

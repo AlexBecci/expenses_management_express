@@ -10,6 +10,7 @@ import UserRoutes from './routes/user.routes.js'
 import AuthRoutes from './routes/auth.routes.js'
 import CategoryRoutes from './routes/category.routes.js'
 import TransactionRoutes from './routes/transaction.routes.js'
+import SalarysHistoricsRoutes from './routes/salary_history.routes.js'
 
 import { testConnection } from './database/db.js';
 import { authenticateToken } from './controller/auth.controller.js';
@@ -39,6 +40,7 @@ app.use('/api', AuthRoutes)
 app.use('/api', authenticateToken, UserRoutes)
 app.use('/api', authenticateToken, CategoryRoutes)
 app.use('/api', authenticateToken, TransactionRoutes)
+app.use('/api', authenticateToken, SalarysHistoricsRoutes)
 
 
 // Servir archivos estáticos desde la carpeta public
