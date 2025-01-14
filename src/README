@@ -1,0 +1,45 @@
+1. Usar variables de entorno
+Actualmente tienes valores como http://localhost:4000 y el puerto del servidor (2000) hardcodeados. Te sugiero usar variables de entorno con dotenv para mayor flexibilidad y seguridad. Por ejemplo:
+
+Instala dotenv:
+
+bash
+Copiar código
+npm install dotenv
+Crea un archivo .env:
+
+env
+Copiar código
+FRONTEND_URL=http://localhost:4000
+PORT=2000
+Configura dotenv en tu archivo server.js:
+
+javascript
+Copiar código
+import dotenv from 'dotenv';
+dotenv.config();
+
+const corsOptions = {
+    origin: process.env.FRONTEND_URL,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+};
+
+const PORT = process.env.PORT || 2000;
+2. Mejorar manejo de rutas protegidas
+Actualmente, estás aplicando authenticateToken directamente en cada ruta que lo requiere. Puedes organizar esto para que sea más claro y fácil de manejar:
+
+Agrupa rutas protegidas:
+javascript
+Copiar código
+app.use('/api', AuthRoutes);
+
+// Rutas protegidas
+app.use('/api', authenticateToken, (protectedRoutes) => {
+    protectedRoutes.use(UserRoutes);
+    protectedRoutes.use(CategoryRoutes);
+    protectedRoutes.use(TransactionRoutes);
+    protectedRoutes.use(SalarysHistoricsRoutes);
+});
+Esto mantiene la lógica de rutas más limpia.

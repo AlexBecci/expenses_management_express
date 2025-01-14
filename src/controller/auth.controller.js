@@ -4,12 +4,7 @@ import jwt from 'jsonwebtoken'
 import { SECRET_KEY, NODE_ENV } from '../config.js'
 import { createUserService, getUserByEmail } from '../service/user.service.js'
 import { handleError } from '../error/message.js'
-import cookieParser from 'cookie-parser'
 
-
-/* -- Insert a user
-INSERT INTO User (name, email, password, phone_number, initial_salary, current_salary)
-VALUES ('John Doe', 'john.doe@example.com', 'encrypted_password', '1234567890', 1000.00, 900.00); */
 export async function register(req, res) {
     const { email, password, name, phone_number } = req.body
     console.log('body que se espera', req.body)
@@ -85,8 +80,9 @@ export function logout(req, res) {
 }
 //funcion que valida la session del usuario mediante un check_session
 export function authenticateToken(req, res, next) {
-    const token = req.cookies.authToken;
- /*    console.log('token recibido', token) */
+    const token = req.cookies.authToken || req.headers['authorization']?.split(' ')[1];
+    console.log('TOKEEEEn', token)
+    /*    console.log('token recibido', token) */
     if (!token) {
         return res.status(401).json({ message: 'No Token Provider' })
     }
@@ -94,7 +90,7 @@ export function authenticateToken(req, res, next) {
         if (err) {
             return res.status(403).json({ message: 'Invalid Token' })
         }
-    /*     console.log('Usuario autenticado', user)//log para verificar qu el usuario se verifico de forma correcta */
+        /*     console.log('Usuario autenticado', user)//log para verificar qu el usuario se verifico de forma correcta */
         req.user = user;
         next()
     })

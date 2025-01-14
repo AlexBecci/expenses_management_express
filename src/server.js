@@ -1,28 +1,34 @@
-// Importamos librerías necesarias
+// Importar librerías necesarias
 import express from 'express';
 import morgan from 'morgan';
 import path, { dirname } from 'path';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
-//routes
-import UserRoutes from './routes/user.routes.js'
-import AuthRoutes from './routes/auth.routes.js'
-import CategoryRoutes from './routes/category.routes.js'
-import TransactionRoutes from './routes/transaction.routes.js'
-import SalarysHistoricsRoutes from './routes/salary_history.routes.js'
-
 import { testConnection } from './database/db.js';
 import { authenticateToken } from './controller/auth.controller.js';
-// Inicializamos Express en la variable app
+
+// Importar rutas
+import UserRoutes from './routes/user.routes.js';
+import AuthRoutes from './routes/auth.routes.js';
+import CategoryRoutes from './routes/category.routes.js';
+import TransactionRoutes from './routes/transaction.routes.js';
+import SalarysHistoricsRoutes from './routes/salary_history.routes.js';
+
+// Configuración dotenv
+dotenv.config();
+
+// Inicializar Express
 const app = express();
 
-// Obtenemos __dirname en ES Modules
+// Obtener __dirname en ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Configuración de CORS
 const corsOptions = {
-    origin: 'http://localhost:3001', // Asegúrate de que esta sea la URL correcta de tu frontend usar variable de env
+    origin: /* process.env.FRONTEND_URL ||  */'http://localhost:4000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
@@ -34,37 +40,50 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(cors(corsOptions));
 
-
-//montar rutas con el prefijo api
-app.use('/api', AuthRoutes)
-app.use('/api', authenticateToken, UserRoutes)
-app.use('/api', authenticateToken, CategoryRoutes)
-app.use('/api', authenticateToken, TransactionRoutes)
-app.use('/api', authenticateToken, SalarysHistoricsRoutes)
-
+// Rutas de API
+app.use('/api', AuthRoutes);
+app.use('/api', authenticateToken, UserRoutes);
+app.use('/api', authenticateToken, CategoryRoutes);
+app.use('/api', authenticateToken, TransactionRoutes);
+app.use('/api', authenticateToken, SalarysHistoricsRoutes);
 
 // Servir archivos estáticos desde la carpeta public
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Rutas
+// Rutas frontend (asegurarte de que las rutas de API tengan prioridad)
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-startServer()
+// Middleware de manejo de errores
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(err.status || 500).json({
+        error: {
+            message: err.message || 'Internal Server Error',
+        },
+    });
+});
 
-//probar la conexion y luego levantar el servidor
+// Función para iniciar el servidor
 async function startServer() {
     try {
-        //probar la conexion a la base de datos
+        // Probar conexión a la base de datos
         await testConnection();
-        //si la conexion es exitosa, iniciar el servidor
-        app.listen(3000)
-        console.log('SERVER ON')
+
+        // Iniciar servidor
+        const PORT = process.env.PORT || 2000;
+        app.listen(PORT, () => {
+            console.log(`Servidor corriendo en http://localhost:${PORT}`);
+        });
     } catch (error) {
-        //manejar errores de conexion
-        console.error("Error en la conexion a la base de datos. No se puede levantar el servidor", error)
+        console.error(
+            'Error en la conexión a la base de datos. No se puede levantar el servidor',
+            error
+        );
     }
 }
+
+startServer();
 
 export default app;
