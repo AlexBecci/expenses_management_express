@@ -1,12 +1,22 @@
 import { pool } from "../database/db.js";
-import { handleDatabaseError, handleError } from "../error/message.js";
+import { handleDatabaseError } from "../error/message.js";
 
 export async function getUsersService(req, res) {
     try {
         const [rows] = await pool.query('SELECT * FROM user');
         res.json(rows)
     } catch (error) {
-        handleError(res, error, 'Error al obtener los usuarios')
+        handleDatabaseError(error)
+    }
+}
+
+//function que me trae los datos del usuario  por user_id
+export async function getUserService(id) {
+    try {
+        const [rows] = await pool.query("SELECT id,name,email,initial_salary,current_salary,creation_date,updated_at,phone_number FROM user  WHERE id = ?", [id])
+        return rows[0]//devolvemos los datos del usuario
+    } catch (error) {
+        handleDatabaseError(error)
     }
 }
 
