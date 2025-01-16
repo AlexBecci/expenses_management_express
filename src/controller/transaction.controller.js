@@ -1,10 +1,10 @@
 import { handleError } from "../error/message.js";
 import { validateRequiredFields } from "../helpers/validation.js";
 import { SalaryHistoryService } from "../service/salary_history.service.js";
-import { createTransactionService, getTransactionById, getTransactionsByUser } from "../service/transaction.service.js";
+import { createTransactionService, getMonthlyBalanceByUser, getTransactionById, getTransactionsByUser } from "../service/transaction.service.js";
 import { getUserService, updateCurrentSalary } from "../service/user.service.js";
-//creamos la instancia de la clase
 
+//creamos la instancia de la clase
 const salaryService = new SalaryHistoryService()
 
 //funcion que trae las transacciones por id usuario o id transaccion
@@ -24,12 +24,39 @@ export async function getTransactions(req, res) {
             //si se pasa el id llamamos a su funcion correspondiente que trae uno por uno por id de transaccion no general como la de usuario 
             const transactions = await getTransactionById(id);
             if (transactions.length === 0) {
-                return res.json(204).json({ message: 'No se econtro la transaccion con ese id ' })
+                return res.status(204).json({ message: 'No se econtro la transaccion con ese id ' })
             }
             return res.json(transactions);
         }
         //si no se pasa ni user_id ni id se devuelve un error
         return res.json(400).json({ message: 'Se debe proporcionr un ID de usuario o un ID de transaccion' })
+    } catch (error) {
+        handleError(error)
+    }
+}
+export async function getBalanceAll(req, res) {
+    const { user_id } = req.query
+    console.log('USERID', user_id)
+    try {
+        if (!user_id) {
+            //si no se pasa ni user_id ni id se devuelve un error
+            return res.status(400).json({ message: 'Se debe proporcionr un ID de usuario o un ID de transaccion' })
+        }
+        const balance = await getMonthlyBalanceByUser(user_id);
+        if (transactions.length === 0) {
+            return res.status(204).json({ message: 'No se encontraron transaccinoes para este usuario' })
+        }
+        return res.json(balance)
+    } catch (error) {
+        handleError(error)
+    }
+}
+
+//function que me trae las transacciones por user_id donde hay un  limit que es una variable
+export async function getLastTransactions() {
+    const { user_id } = req.query
+    try {
+
     } catch (error) {
         handleError(error)
     }

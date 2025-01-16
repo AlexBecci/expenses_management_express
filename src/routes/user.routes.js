@@ -8,4 +8,5 @@ router.get('/users', getUsers)
 //usuario uno por uno
 router.get('/users/:id',getUser);
 
+
 export default router
