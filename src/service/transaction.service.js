@@ -37,8 +37,8 @@ export async function getTransactionById(id) {
 //crear una transaccion
 export async function createTransactionService(user_id, date, amount, type, description, category_id, period) {
     try {
-        const result = await pool.query('INSERT INTO transaction (user_id,date,amount,type,description,category_id,period) VALUES (?,?,?,?,?,?,?)', [user_id, date, amount, type, description, category_id, period])
-        return { id: result.insertId, message: 'Transaccion creada con exito' }
+        const [result] = await pool.query('INSERT INTO transaction (user_id,date,amount,type,description,category_id,period) VALUES (?,?,?,?,?,?,?)', [user_id, date, amount, type, description, category_id, period])
+        return result
 
     } catch (error) {
         handleDatabaseError(error)

@@ -5,11 +5,15 @@ import { handleDatabaseError } from "../error/message.js";
 export class SalaryHistoryService {
     //crear un nuevo salario historico
     async createSalaryHistory(user_id, previous_salary, new_salary) {
-        const [result] = await pool.query(
-            'INSERT INTO salary_history (user_id, previous_salary, new_salary) VALUES (?, ?, ?)',
-            [user_id, previous_salary, new_salary]
-        );
-        return result.insertId;
+        try {
+            const [result] = await pool.query(
+                'INSERT INTO salary_history (user_id, previous_salary, new_salary) VALUES (?, ?, ?)',
+                [user_id, previous_salary, new_salary]
+            );
+            return result.insertId;
+        } catch (error) {
+            handleDatabaseError(error)
+        }
     }
     //obetener los salarios historicos por usuario
     async getSalaryHistoriesByUserId(user_id) {

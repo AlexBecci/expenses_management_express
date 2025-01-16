@@ -14,6 +14,10 @@ export async function getUsersService(req, res) {
 export async function getUserService(id) {
     try {
         const [rows] = await pool.query("SELECT id,name,email,initial_salary,current_salary,creation_date,updated_at,phone_number FROM user  WHERE id = ?", [id])
+        if (rows.length === 0) {
+            throw new Error("Usuario no encontrado");
+
+        }
         return rows[0]//devolvemos los datos del usuario
     } catch (error) {
         handleDatabaseError(error)
@@ -38,6 +42,18 @@ export async function createUserService(email, password, name, phone_number) {
         return { id: result.insertId, message: 'Usuario creado con exito' }
     } catch (error) {
         /* handleError(res, error) */
+        handleDatabaseError(error)
+    }
+}
+
+//function que me actualiza el salario actual de mi usuario
+export async function updateCurrentSalary(new_salary, user_id) {
+    try {
+        const [result] = await pool.query('UPDATE user SET current_salary = ? WHERE id= ?', [new_salary, user_id])
+        if (result.affectedRows === 0) {
+            throw new Error("Usuario no encontrado para actualizar el salario.");
+        }
+    } catch (error) {
         handleDatabaseError(error)
     }
 }
