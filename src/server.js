@@ -15,6 +15,7 @@ import AuthRoutes from './routes/auth.routes.js';
 import CategoryRoutes from './routes/category.routes.js';
 import TransactionRoutes from './routes/transaction.routes.js';
 import SalarysHistoricsRoutes from './routes/salary_history.routes.js';
+import BudgetsRoutes from './routes/budget.routes.js'
 
 // Configuración dotenv
 dotenv.config();
@@ -46,6 +47,7 @@ app.use('/api', authenticateToken, UserRoutes);
 app.use('/api', authenticateToken, CategoryRoutes);
 app.use('/api', authenticateToken, TransactionRoutes);
 app.use('/api', authenticateToken, SalarysHistoricsRoutes);
+app.use('/api', authenticateToken, BudgetsRoutes);
 
 // Servir archivos estáticos desde la carpeta public
 app.use(express.static(path.join(__dirname, 'public')));

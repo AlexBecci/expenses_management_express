@@ -37,7 +37,6 @@ export class SalaryHistoryController {
     //update salarios historicos
     async updateSalaryHistory(req, res) {
         const { id } = req.params;
-        console.log(id)
         const { user_id, previous_salary, new_salary } = req.body;
         if (!user_id || !previous_salary || !new_salary) {
             return res.status(400).json({ message: 'Todos los campos son requeridos' })
