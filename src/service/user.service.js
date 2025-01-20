@@ -1,6 +1,7 @@
 import { pool } from "../database/db.js";
 import { handleDatabaseError } from "../error/message.js";
 
+
 export async function getUsersService(req, res) {
     try {
         const [rows] = await pool.query('SELECT * FROM user');
